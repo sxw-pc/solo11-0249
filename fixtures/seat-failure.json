@@ -1,0 +1,19 @@
+[
+  {
+    "event_id": "sf1",
+    "op": "reserve",
+    "id": "lease-c",
+    "intent": "work-a",
+    "cluster": "cluster-c",
+    "role": "backup",
+    "cpu": 3,
+    "mem": 4,
+    "expires": 50
+  },
+  {
+    "event_id": "sf2",
+    "op": "expire",
+    "id": "lease-b",
+    "at": 100
+  }
+]

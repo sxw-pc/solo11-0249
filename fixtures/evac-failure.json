@@ -1,0 +1,19 @@
+[
+  {
+    "event_id": "ef1",
+    "op": "incident",
+    "id": "incident-watch",
+    "cluster": "cluster-b",
+    "severity": 1,
+    "generation": 1
+  },
+  {
+    "event_id": "ef2",
+    "op": "plan",
+    "id": "move-bad",
+    "intent": "work-a",
+    "source": "cluster-b",
+    "target": "cluster-c",
+    "incident": "incident-watch"
+  }
+]

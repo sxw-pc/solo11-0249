@@ -1,0 +1,13 @@
+[
+  {
+    "subsystem": "intent",
+    "payload": {
+      "event_id": "x1",
+      "op": "assign_primary",
+      "intent": "work-a",
+      "cluster": "cluster-a",
+      "grant": "grant-a",
+      "at": 21
+    }
+  }
+]

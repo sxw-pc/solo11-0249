@@ -1,0 +1,42 @@
+[
+  {
+    "event_id": "e1",
+    "op": "incident",
+    "id": "incident-a",
+    "cluster": "cluster-a",
+    "severity": 4,
+    "generation": 1
+  },
+  {
+    "event_id": "e2",
+    "op": "plan",
+    "id": "move-a",
+    "intent": "work-a",
+    "source": "cluster-a",
+    "target": "cluster-b",
+    "incident": "incident-a"
+  },
+  {
+    "event_id": "e3",
+    "op": "receipt",
+    "id": "fence-a",
+    "plan": "move-a",
+    "kind": "source_fenced",
+    "cluster": "cluster-a",
+    "generation": 1
+  },
+  {
+    "event_id": "e4",
+    "op": "receipt",
+    "id": "ready-b",
+    "plan": "move-a",
+    "kind": "target_ready",
+    "cluster": "cluster-b",
+    "generation": 1
+  },
+  {
+    "event_id": "e5",
+    "op": "handoff",
+    "plan": "move-a"
+  }
+]

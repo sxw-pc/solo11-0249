@@ -1,0 +1,17 @@
+[
+  {
+    "event_id": "if1",
+    "op": "claim",
+    "id": "work-bad",
+    "tenant": "tenant-a",
+    "region": "west",
+    "role": "critical"
+  },
+  {
+    "event_id": "if2",
+    "op": "freeze",
+    "intent": "work-a",
+    "revision": 2,
+    "frozen": true
+  }
+]

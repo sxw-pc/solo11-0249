@@ -1,0 +1,43 @@
+[
+  {
+    "event_id": "i1",
+    "op": "rule",
+    "tenant": "tenant-a",
+    "regions": [
+      "east"
+    ],
+    "revision": 1
+  },
+  {
+    "event_id": "i2",
+    "op": "claim",
+    "id": "work-a",
+    "tenant": "tenant-a",
+    "region": "east",
+    "role": "critical"
+  },
+  {
+    "event_id": "i3",
+    "op": "grant",
+    "id": "grant-a",
+    "intent": "work-a",
+    "actor": "owner-a",
+    "role": "promote",
+    "generation": 1,
+    "expires": 100
+  },
+  {
+    "event_id": "i4",
+    "op": "freeze",
+    "intent": "work-a",
+    "revision": 2,
+    "frozen": true
+  },
+  {
+    "event_id": "i5",
+    "op": "freeze",
+    "intent": "work-a",
+    "revision": 3,
+    "frozen": false
+  }
+]
