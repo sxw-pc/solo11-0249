@@ -64,9 +64,17 @@ class Business(unittest.TestCase):
         self.assertEqual(one(self.db,'SELECT status FROM workload_intents WHERE id=?',('work-a',))['status'],'active')
         self.assertTrue(replay(self.path)['verified'])
 
+    def test_direct_second_primary_bypasses_neither_fence_nor_role_policy(self):
+        self.prepared()
+        self.assertEqual(intent.run(self.db,{'event_id':'bypass','op':'assign_primary','intent':'work-a','cluster':'cluster-b','grant':'grant-a','at':22})['decision'],'handoff_required')
+        self.assertEqual(seat.run(self.db,{'event_id':'invalid-role','op':'reserve','id':'lease-x','intent':'work-a','cluster':'cluster-c','role':'standby_writer','cpu':1,'mem':1,'expires':50})['decision'],'invalid_placement_role')
+        self.assertEqual(one(self.db,'SELECT primary_cluster FROM workload_intents WHERE id=?',('work-a',))['primary_cluster'],'cluster-a')
+        self.assertTrue(replay(self.path)['verified'])
+
     def test_duplicate_business_id_is_controlled_and_atomic(self):
         self.prepared()
         seat.run(self.db,{'event_id':'new-cluster','op':'observe','id':'cluster-d','region':'east','domain':'rack-d','cpu':8,'mem':8,'generation':1,'healthy':True})
-        result=seat.run(self.db,{'event_id':'new-event','op':'reserve','id':'lease-a','intent':'work-a','cluster':'cluster-d','role':'other','cpu':1,'mem':1,'expires':80})
+        intent.run(self.db,{'event_id':'new-intent','op':'claim','id':'work-other','tenant':'tenant-a','region':'east','role':'critical'})
+        result=seat.run(self.db,{'event_id':'new-event','op':'reserve','id':'lease-a','intent':'work-other','cluster':'cluster-d','role':'primary','cpu':1,'mem':1,'expires':80})
         self.assertEqual(result['decision'],'business_identity_conflict')
         self.assertEqual(one(self.db,'SELECT COUNT(*) n FROM capacity_claims WHERE id=?',('lease-a',))['n'],1)

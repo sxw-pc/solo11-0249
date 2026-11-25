@@ -14,6 +14,7 @@ def handle(db,x):
         db.execute('INSERT INTO cluster_inventory VALUES(?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET region=excluded.region,domain=excluded.domain,cpu=excluded.cpu,mem=excluded.mem,generation=excluded.generation,healthy=excluded.healthy',(x['id'],x['region'],x['domain'],x['cpu'],x['mem'],x['generation'],int(x['healthy'])))
         return {'decision':'observed'}
     if op=='reserve':
+        if x['role'] not in ('primary','backup'):return {'decision':'invalid_placement_role'}
         if x['expires']<=x.get('at',0):return {'decision':'invalid_lease_window'}
         i=one(db,'SELECT * FROM workload_intents WHERE id=?',(x['intent'],))
         c=one(db,'SELECT * FROM cluster_inventory WHERE id=?',(x['cluster'],))

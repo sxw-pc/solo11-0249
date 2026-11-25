@@ -46,6 +46,8 @@ def handle(db,x):
         g=one(db,'SELECT * FROM owner_grants WHERE id=?',(x['grant'],))
         if not i or i['status']!='active' or not g or g['intent']!=x['intent'] or g['role']!='promote' or g['expires']<x['at']:
             return {'decision':'authorization_denied'}
+        if i['primary_cluster'] is not None:
+            return {'decision':'handoff_required'}
         lease=one(db,"SELECT * FROM placement_leases WHERE intent=? AND cluster=? AND state='occupied'",(x['intent'],x['cluster']))
         if not lease:return {'decision':'no_occupied_seat'}
         db.execute('UPDATE workload_intents SET primary_cluster=?,revision=revision+1 WHERE id=?',(x['cluster'],x['intent']))

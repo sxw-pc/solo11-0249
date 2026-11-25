@@ -60,6 +60,7 @@ def handle(db,x):
         db.execute("UPDATE move_plans SET state='complete' WHERE id=?",(x['plan'],))
         db.execute('UPDATE workload_intents SET primary_cluster=?,revision=revision+1 WHERE id=?',(p['target'],p['intent']))
         db.execute("UPDATE placement_leases SET state='released' WHERE intent=? AND cluster=? AND state='occupied'",(p['intent'],p['source']))
+        db.execute("UPDATE placement_leases SET role='primary' WHERE intent=? AND cluster=? AND role='backup' AND state='occupied'",(p['intent'],p['target']))
         db.execute("UPDATE capacity_claims SET state='released' WHERE intent=? AND cluster=? AND state='active'",(p['intent'],p['source']))
         db.execute("UPDATE recovery_cases SET state='recovered' WHERE source=? AND state='awaiting_replan' AND plan IN (SELECT id FROM move_plans WHERE intent=?)",(p['source'],p['intent']))
         return {'decision':'transferred','primary':p['target']}
