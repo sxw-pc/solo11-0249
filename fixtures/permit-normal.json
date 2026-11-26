@@ -1,0 +1,5 @@
+[
+  {"event_id":"permit-window","op":"window","id":"permit-window","cluster":"cluster-a","starts":1,"ends":20,"supervisor":"supervisor-a"},
+  {"event_id":"permit-issue","op":"permit","id":"permit-a","window":"permit-window","worker":"worker-a","equipment":"rack-a"},
+  {"event_id":"permit-checkin","op":"checkin","id":"permit-checkin","permit":"permit-a","at":2,"kind":"entered"}
+]

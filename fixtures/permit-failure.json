@@ -1,0 +1,4 @@
+[
+  {"event_id":"permit-invalid-window","op":"window","id":"invalid","cluster":"cluster-a","starts":5,"ends":5,"supervisor":"supervisor-a"},
+  {"event_id":"permit-missing","op":"permit","id":"bad","window":"invalid","worker":"worker-a","equipment":"rack-a"}
+]
