@@ -1,0 +1,4 @@
+[
+  {"event_id":"timeline-sample","op":"sample","id":"timeline-sample","cluster":"cluster-a","sensor":"node","at":5,"signal":"link_down","value":1},
+  {"event_id":"timeline-finding","op":"finding","id":"timeline-finding","incident":"incident-a","cluster":"cluster-a","cause":"link_down"}
+]

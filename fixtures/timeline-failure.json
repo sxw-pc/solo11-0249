@@ -1,0 +1,3 @@
+[
+  {"event_id":"timeline-unobserved","op":"finding","id":"timeline-unobserved","incident":"incident-a","cluster":"cluster-a","cause":"power_loss"}
+]
