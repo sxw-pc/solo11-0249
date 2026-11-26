@@ -1,0 +1,176 @@
+[
+  {
+    "event_id": "rf0-offer-small",
+    "op": "offer_shadow",
+    "id": "offer-shadow-small",
+    "cluster": "cluster-shadow-f",
+    "cpu": 2,
+    "mem": 2,
+    "generation": 1,
+    "available_at": 0,
+    "independent": true
+  },
+  {
+    "event_id": "rf1-seal",
+    "op": "seal",
+    "id": "rehearsal-fail",
+    "intent": "work-a",
+    "source": "cluster-a",
+    "backup": "cluster-b",
+    "at": 10,
+    "mode": "shadow",
+    "recovery_point": "seq:2000",
+    "probe_seconds": 30,
+    "timeout_at": 60,
+    "deadline": 90
+  },
+  {
+    "event_id": "rf2-consent",
+    "op": "consent",
+    "rehearsal": "rehearsal-fail",
+    "at": 11
+  },
+  {
+    "event_id": "rf3-reserve-full",
+    "op": "reserve_shadow",
+    "id": "resource-fail",
+    "rehearsal": "rehearsal-fail",
+    "offer": "offer-shadow-small",
+    "cpu": 2,
+    "mem": 2,
+    "at": 12
+  },
+  {
+    "event_id": "rf4-seal-short",
+    "op": "seal",
+    "id": "rehearsal-short",
+    "intent": "work-a",
+    "source": "cluster-a",
+    "at": 13,
+    "mode": "shadow",
+    "recovery_point": "seq:2001",
+    "probe_seconds": 30,
+    "timeout_at": 60,
+    "deadline": 90
+  },
+  {
+    "event_id": "rf5-consent-short",
+    "op": "consent",
+    "rehearsal": "rehearsal-short",
+    "at": 14
+  },
+  {
+    "event_id": "rf6-reserve-exhausted",
+    "op": "reserve_shadow",
+    "id": "resource-short",
+    "rehearsal": "rehearsal-short",
+    "offer": "offer-shadow-small",
+    "cpu": 1,
+    "mem": 1,
+    "at": 15
+  },
+  {
+    "event_id": "rf7-certify-empty",
+    "op": "certify",
+    "id": "cert-short-missing",
+    "rehearsal": "rehearsal-short",
+    "at": 16
+  },
+  {
+    "event_id": "rf8-start",
+    "op": "start",
+    "rehearsal": "rehearsal-fail",
+    "at": 20,
+    "data_ref": "isolated-copy-rehearsal-fail",
+    "isolation": "isolated"
+  },
+  {
+    "event_id": "rf9-fence",
+    "op": "evidence",
+    "id": "evidence-fence-f",
+    "rehearsal": "rehearsal-fail",
+    "kind": "source_fenced",
+    "at": 21,
+    "generation": 1,
+    "scope": "scope-rehearsal-fail-g1",
+    "cluster": "cluster-a",
+    "cluster_generation": 1,
+    "origin_ref": "origin/fence-rehearsal-fail.json",
+    "fence_scope": "scope-rehearsal-fail-g1"
+  },
+  {
+    "event_id": "rf10-ready",
+    "op": "evidence",
+    "id": "evidence-ready-f",
+    "rehearsal": "rehearsal-fail",
+    "kind": "target_ready",
+    "at": 22,
+    "generation": 1,
+    "scope": "scope-rehearsal-fail-g1",
+    "cluster": "cluster-shadow-f",
+    "cluster_generation": 1,
+    "origin_ref": "origin/restore-rehearsal-fail.json",
+    "recovery_point": "seq:2000",
+    "recovery_seconds": 18
+  },
+  {
+    "event_id": "rf11-probe-too-short",
+    "op": "evidence",
+    "id": "evidence-probe-f-short",
+    "rehearsal": "rehearsal-fail",
+    "kind": "probe",
+    "at": 33,
+    "generation": 1,
+    "scope": "scope-rehearsal-fail-g1",
+    "origin": "customer_probe",
+    "origin_ref": "origin/probe-rehearsal-fail-short.json",
+    "samples": [
+      {"at": 23, "ok": true},
+      {"at": 28, "ok": true},
+      {"at": 33, "ok": false}
+    ]
+  },
+  {
+    "event_id": "rf12-timeout-early",
+    "op": "timeout",
+    "id": "timeout-early",
+    "rehearsal": "rehearsal-fail",
+    "at": 50
+  },
+  {
+    "event_id": "rf13-timeout",
+    "op": "timeout",
+    "id": "timeout-final",
+    "rehearsal": "rehearsal-fail",
+    "at": 61,
+    "reason": "probe_sustain_timeout"
+  },
+  {
+    "event_id": "rf14-late-probe",
+    "op": "evidence",
+    "id": "evidence-probe-f-late",
+    "rehearsal": "rehearsal-fail",
+    "kind": "probe",
+    "at": 62,
+    "generation": 1,
+    "scope": "scope-rehearsal-fail-g1",
+    "origin": "customer_probe",
+    "origin_ref": "origin/probe-rehearsal-fail-late.json",
+    "sustained_seconds": 30
+  },
+  {
+    "event_id": "rf15-certify-closed",
+    "op": "certify",
+    "id": "cert-fail-after-timeout",
+    "rehearsal": "rehearsal-fail",
+    "at": 63
+  },
+  {
+    "event_id": "rf16-settle-again",
+    "op": "settle",
+    "id": "settle-fail",
+    "rehearsal": "rehearsal-fail",
+    "at": 64,
+    "reason": "auditor_verified_settlement"
+  }
+]

@@ -1,0 +1,111 @@
+[
+  {
+    "event_id": "rn0-offer",
+    "op": "offer_shadow",
+    "id": "offer-shadow-n",
+    "cluster": "cluster-shadow-n",
+    "cpu": 8,
+    "mem": 16,
+    "generation": 1,
+    "available_at": 0,
+    "independent": true
+  },
+  {
+    "event_id": "rn1-seal",
+    "op": "seal",
+    "id": "rehearsal-normal",
+    "intent": "work-a",
+    "source": "cluster-a",
+    "backup": "cluster-b",
+    "at": 10,
+    "mode": "shadow",
+    "recovery_point": "seq:1000",
+    "probe_seconds": 30,
+    "timeout_at": 90,
+    "deadline": 120,
+    "auditor": "auditor-quarterly"
+  },
+  {
+    "event_id": "rn2-consent",
+    "op": "consent",
+    "rehearsal": "rehearsal-normal",
+    "at": 11
+  },
+  {
+    "event_id": "rn3-reserve",
+    "op": "reserve_shadow",
+    "id": "resource-normal",
+    "rehearsal": "rehearsal-normal",
+    "offer": "offer-shadow-n",
+    "cpu": 4,
+    "mem": 8,
+    "at": 12
+  },
+  {
+    "event_id": "rn4-start",
+    "op": "start",
+    "rehearsal": "rehearsal-normal",
+    "at": 13,
+    "data_ref": "isolated-copy-rehearsal-normal",
+    "isolation": "isolated"
+  },
+  {
+    "event_id": "rn5-fence",
+    "op": "evidence",
+    "id": "evidence-fence-n",
+    "rehearsal": "rehearsal-normal",
+    "kind": "source_fenced",
+    "at": 14,
+    "generation": 1,
+    "scope": "scope-rehearsal-normal-g1",
+    "cluster": "cluster-a",
+    "cluster_generation": 1,
+    "origin_ref": "origin/fence-rehearsal-normal.json",
+    "fence_scope": "scope-rehearsal-normal-g1",
+    "fence_effect": "isolated_source_endpoint_fenced"
+  },
+  {
+    "event_id": "rn6-ready",
+    "op": "evidence",
+    "id": "evidence-ready-n",
+    "rehearsal": "rehearsal-normal",
+    "kind": "target_ready",
+    "at": 45,
+    "observed_at": 15,
+    "generation": 1,
+    "scope": "scope-rehearsal-normal-g1",
+    "cluster": "cluster-shadow-n",
+    "cluster_generation": 1,
+    "origin_ref": "origin/restore-rehearsal-normal.json",
+    "recovery_point": "seq:1000",
+    "recovery_seconds": 24
+  },
+  {
+    "event_id": "rn7-probe",
+    "op": "evidence",
+    "id": "evidence-probe-n",
+    "rehearsal": "rehearsal-normal",
+    "kind": "probe",
+    "at": 46,
+    "generation": 1,
+    "scope": "scope-rehearsal-normal-g1",
+    "origin": "customer_probe",
+    "origin_ref": "origin/customer-probe-rehearsal-normal.json",
+    "samples": [
+      {"at": 16, "ok": true},
+      {"at": 21, "ok": true},
+      {"at": 26, "ok": true},
+      {"at": 31, "ok": true},
+      {"at": 36, "ok": true},
+      {"at": 41, "ok": true},
+      {"at": 46, "ok": true}
+    ]
+  },
+  {
+    "event_id": "rn8-certify",
+    "op": "certify",
+    "id": "cert-normal",
+    "rehearsal": "rehearsal-normal",
+    "at": 50
+  }
+]

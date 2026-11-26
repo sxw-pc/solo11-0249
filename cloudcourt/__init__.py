@@ -1,2 +1,2 @@
-from . import intent, seat, evac
-MODULES={'intent':intent, 'seat':seat, 'evac':evac}
+from . import intent, seat, rehearsal, evac
+MODULES={'intent':intent, 'seat':seat, 'rehearsal':rehearsal, 'evac':evac}
