@@ -1,0 +1,4 @@
+[
+  {"event_id":"carbon-bad-ceiling","op":"order","id":"carbon-invalid","tenant":"tenant-a","period":"2026-12","ceiling":-1},
+  {"event_id":"carbon-bad-reading","op":"reading","id":"carbon-invalid-reading","cluster":"cluster-a","period":"2026-12","units":-1,"source":"grid-a","revision":1}
+]

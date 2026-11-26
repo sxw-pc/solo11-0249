@@ -1,0 +1,5 @@
+[
+  {"event_id":"carbon-order","op":"order","id":"carbon-order","tenant":"tenant-a","period":"2026-11","ceiling":20},
+  {"event_id":"carbon-reading","op":"reading","id":"carbon-reading","cluster":"cluster-a","period":"2026-11","units":7,"source":"grid-a","revision":1},
+  {"event_id":"carbon-statement","op":"statement","id":"carbon-statement","order":"carbon-order"}
+]
