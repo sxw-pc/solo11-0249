@@ -1,0 +1,4 @@
+[
+  {"event_id":"notice-wrong-route","op":"notice","id":"notice-wrong","incident":"incident-a","tenant":"tenant-b","route":"notice-route","summary":"private incident"},
+  {"event_id":"notice-missing","op":"receipt","id":"notice-missing","notice":"missing","delivered":false,"at":11}
+]

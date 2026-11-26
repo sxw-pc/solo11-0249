@@ -1,0 +1,5 @@
+[
+  {"event_id":"notice-route","op":"route","id":"notice-route","tenant":"tenant-a","channel":"email","address":"ops@example.test","revision":1},
+  {"event_id":"notice-create","op":"notice","id":"notice-a","incident":"incident-a","tenant":"tenant-a","route":"notice-route","summary":"service interruption"},
+  {"event_id":"notice-delivery","op":"receipt","id":"notice-delivery","notice":"notice-a","delivered":true,"at":10}
+]
