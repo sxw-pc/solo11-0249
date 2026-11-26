@@ -31,7 +31,14 @@ def main():
         else:
             if not args.fixture:parser.error('--fixture required')
             commands=json.loads(Path(args.fixture).read_text(encoding='utf-8'))
-            result=[MODULES[args.command].run(db,x) for x in commands]
+            result=[]
+            for command in commands:
+                # Envelope fixtures (see fixtures/path.json and
+                # fixtures/incident-dual-tenant.json) carry their subsystem.
+                if isinstance(command,dict) and 'subsystem' in command and 'payload' in command:
+                    result.append(MODULES[command['subsystem']].run(db,command['payload']))
+                else:
+                    result.append(MODULES[args.command].run(db,command))
         db.close()
     print(json.dumps(result,ensure_ascii=False,indent=2))
     if args.command=='replay' and not result['verified']:raise SystemExit(2)

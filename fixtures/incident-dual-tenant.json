@@ -1,0 +1,78 @@
+[
+  {"subsystem": "intent", "payload": {"event_id": "dt-rule-jia", "op": "rule", "tenant": "tenant-jia", "regions": ["east"], "revision": 1}},
+  {"subsystem": "intent", "payload": {"event_id": "dt-rule-yi", "op": "rule", "tenant": "tenant-yi", "regions": ["east"], "revision": 1}},
+  {"subsystem": "intent", "payload": {"event_id": "dt-rule-bing", "op": "rule", "tenant": "tenant-bing", "regions": ["east"], "revision": 1}},
+  {"subsystem": "intent", "payload": {"event_id": "dt-work-jia", "op": "claim", "id": "work-jia", "tenant": "tenant-jia", "region": "east", "role": "critical-writes"}},
+  {"subsystem": "intent", "payload": {"event_id": "dt-work-yi", "op": "claim", "id": "work-yi", "tenant": "tenant-yi", "region": "east", "role": "critical-writes"}},
+  {"subsystem": "intent", "payload": {"event_id": "dt-work-bing", "op": "claim", "id": "work-bing", "tenant": "tenant-bing", "region": "east", "role": "standard"}},
+
+  {"subsystem": "seat", "payload": {"event_id": "dt-obs-a", "op": "observe", "id": "cluster-a", "region": "east", "domain": "rack-a", "cpu": 16, "mem": 32, "generation": 1, "healthy": true}},
+  {"subsystem": "seat", "payload": {"event_id": "dt-obs-b", "op": "observe", "id": "cluster-b", "region": "east", "domain": "rack-b", "cpu": 16, "mem": 32, "generation": 1, "healthy": true}},
+  {"subsystem": "seat", "payload": {"event_id": "dt-obs-c", "op": "observe", "id": "cluster-c", "region": "east", "domain": "rack-c", "cpu": 16, "mem": 32, "generation": 1, "healthy": true}},
+
+  {"subsystem": "seat", "payload": {"event_id": "dt-res-jia-a", "op": "reserve", "id": "lease-jia-a", "intent": "work-jia", "cluster": "cluster-a", "role": "primary", "cpu": 2, "mem": 4, "expires": 200}},
+  {"subsystem": "seat", "payload": {"event_id": "dt-occ-jia-a", "op": "occupy", "id": "lease-jia-a", "at": 10}},
+  {"subsystem": "seat", "payload": {"event_id": "dt-res-jia-b", "op": "reserve", "id": "lease-jia-b", "intent": "work-jia", "cluster": "cluster-b", "role": "backup", "cpu": 2, "mem": 4, "expires": 200}},
+  {"subsystem": "seat", "payload": {"event_id": "dt-occ-jia-b", "op": "occupy", "id": "lease-jia-b", "at": 11}},
+  {"subsystem": "seat", "payload": {"event_id": "dt-res-yi-a", "op": "reserve", "id": "lease-yi-a", "intent": "work-yi", "cluster": "cluster-a", "role": "primary", "cpu": 2, "mem": 4, "expires": 200}},
+  {"subsystem": "seat", "payload": {"event_id": "dt-occ-yi-a", "op": "occupy", "id": "lease-yi-a", "at": 10}},
+  {"subsystem": "seat", "payload": {"event_id": "dt-res-yi-b", "op": "reserve", "id": "lease-yi-b", "intent": "work-yi", "cluster": "cluster-b", "role": "backup", "cpu": 2, "mem": 4, "expires": 200}},
+  {"subsystem": "seat", "payload": {"event_id": "dt-occ-yi-b", "op": "occupy", "id": "lease-yi-b", "at": 11}},
+  {"subsystem": "seat", "payload": {"event_id": "dt-res-bing-c", "op": "reserve", "id": "lease-bing-c", "intent": "work-bing", "cluster": "cluster-c", "role": "primary", "cpu": 2, "mem": 4, "expires": 200}},
+  {"subsystem": "seat", "payload": {"event_id": "dt-occ-bing-c", "op": "occupy", "id": "lease-bing-c", "at": 10}},
+
+  {"subsystem": "intent", "payload": {"event_id": "dt-grant-jia", "op": "grant", "id": "grant-jia", "intent": "work-jia", "actor": "owner-jia", "role": "promote", "generation": 1, "expires": 200}},
+  {"subsystem": "intent", "payload": {"event_id": "dt-grant-yi", "op": "grant", "id": "grant-yi", "intent": "work-yi", "actor": "owner-yi", "role": "promote", "generation": 1, "expires": 200}},
+  {"subsystem": "intent", "payload": {"event_id": "dt-assign-jia", "op": "assign_primary", "intent": "work-jia", "cluster": "cluster-a", "grant": "grant-jia", "at": 12}},
+  {"subsystem": "intent", "payload": {"event_id": "dt-assign-yi", "op": "assign_primary", "intent": "work-yi", "cluster": "cluster-a", "grant": "grant-yi", "at": 12}},
+
+  {"subsystem": "evac", "payload": {"event_id": "dt-incident", "op": "incident", "id": "inc-dual", "cluster": "cluster-a", "severity": 4, "generation": 1}},
+  {"subsystem": "evac", "payload": {"event_id": "dt-plan-jia", "op": "plan", "id": "move-jia", "intent": "work-jia", "source": "cluster-a", "target": "cluster-b", "incident": "inc-dual"}},
+  {"subsystem": "evac", "payload": {"event_id": "dt-plan-yi", "op": "plan", "id": "move-yi", "intent": "work-yi", "source": "cluster-a", "target": "cluster-b", "incident": "inc-dual"}},
+  {"subsystem": "evac", "payload": {"event_id": "dt-fence-jia", "op": "receipt", "id": "fence-jia", "plan": "move-jia", "kind": "source_fenced", "cluster": "cluster-a", "generation": 1}},
+  {"subsystem": "evac", "payload": {"event_id": "dt-ready-jia", "op": "receipt", "id": "ready-jia", "plan": "move-jia", "kind": "target_ready", "cluster": "cluster-b", "generation": 1}},
+  {"subsystem": "evac", "payload": {"event_id": "dt-handoff-jia", "op": "handoff", "plan": "move-jia"}},
+  {"subsystem": "evac", "payload": {"event_id": "dt-fence-yi", "op": "receipt", "id": "fence-yi", "plan": "move-yi", "kind": "source_fenced", "cluster": "cluster-a", "generation": 1}},
+  {"subsystem": "evac", "payload": {"event_id": "dt-ready-yi", "op": "receipt", "id": "ready-yi", "plan": "move-yi", "kind": "target_ready", "cluster": "cluster-b", "generation": 1}},
+  {"subsystem": "evac", "payload": {"event_id": "dt-handoff-yi", "op": "handoff", "plan": "move-yi"}},
+
+  {"subsystem": "insurance", "payload": {
+    "event_id": "dt-policy", "op": "policy", "id": "pol-dual",
+    "tenant": "platform-msp", "subject": "platform-msp",
+    "subjects": ["tenant-jia", "tenant-yi"],
+    "window_start": 1, "window_end": 1000, "policy_year": "FY2026",
+    "annual_limit": 500, "incident_limit": 200, "deductible": 20,
+    "outage_scope": ["temporary_capacity", "write_outage"],
+    "recovery_scope": ["data_recovery"],
+    "insurer_generation": 7, "signed_at": 2
+  }},
+
+  {"subsystem": "insurance", "payload": {"event_id": "dt-outage-jia", "op": "outage", "id": "outage-jia", "incident": "inc-dual", "tenant": "tenant-jia", "intent": "work-jia", "cluster": "cluster-a", "confirmed_by": "jia-operations", "interrupted_at": 20, "restored_at": 40, "write_outage": 1}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-outage-yi", "op": "outage", "id": "outage-yi", "incident": "inc-dual", "tenant": "tenant-yi", "intent": "work-yi", "cluster": "cluster-a", "confirmed_by": "yi-operations", "interrupted_at": 21, "restored_at": 43, "write_outage": 1}},
+
+  {"subsystem": "insurance", "payload": {"event_id": "dt-invoice-jia", "op": "invoice", "id": "inv-jia-capacity", "ref": "CAPCO-1001", "tenant": "tenant-jia", "intent": "work-jia", "incident": "inc-dual", "kind": "temporary_capacity", "category": "outage", "vendor": "capco", "amount": 100, "incurred_at": 30}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-invoice-yi", "op": "invoice", "id": "inv-yi-recovery", "ref": "RESTORECO-2049", "tenant": "tenant-yi", "intent": "work-yi", "incident": "inc-dual", "kind": "data_recovery", "category": "recovery", "vendor": "restoreco", "amount": 60, "incurred_at": 33}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-offset-yi-credit", "op": "offset", "id": "offset-yi-credit", "tenant": "tenant-yi", "incident": "inc-dual", "kind": "service_credit", "source": "platform-free-standby-seats", "contract_clause": "MSA-12.4 service continuity credit", "amount": 15, "at": 36}},
+
+  {"subsystem": "insurance", "payload": {"event_id": "dt-claim-jia", "op": "claim", "id": "claim-jia", "policy": "pol-dual", "incident": "inc-dual", "tenant": "tenant-jia", "intent": "work-jia", "lease": "lease-jia-a", "outage": "outage-jia", "invoices": ["inv-jia-capacity"], "amount": 100, "at": 50}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-claim-yi", "op": "claim", "id": "claim-yi", "policy": "pol-dual", "incident": "inc-dual", "tenant": "tenant-yi", "intent": "work-yi", "lease": "lease-yi-a", "outage": "outage-yi", "invoices": ["inv-yi-recovery"], "amount": 60, "at": 50}},
+
+  {"subsystem": "insurance", "payload": {"event_id": "dt-adjust-jia", "op": "adjust", "id": "order-jia", "claim": "claim-jia", "at": 51}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-adjust-yi", "op": "adjust", "id": "order-yi", "claim": "claim-yi", "at": 52}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-confirm-jia", "op": "confirm", "claim": "claim-jia", "confirmed_by": "tenant-jia-cfo", "at": 53}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-confirm-yi", "op": "confirm", "claim": "claim-yi", "confirmed_by": "tenant-yi-cfo", "at": 54}},
+
+  {"subsystem": "insurance", "payload": {"event_id": "dt-settle-jia-direct", "op": "settlement", "id": "settle-jia-direct", "claim": "claim-jia", "method": "direct_pay", "invoice": "inv-jia-capacity", "restored_at": 39, "recovery_target": "at-fault-storage-vendor", "at": 55}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-receipt-jia", "op": "payment_receipt", "id": "receipt-jia-wire", "settlement": "settle-jia-direct", "channel": "provider-wire", "ref": "WIRE-7001", "paid_at": 56}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-settle-yi-cash", "op": "settlement", "id": "settle-yi-cash", "claim": "claim-yi", "method": "cash", "restored_at": 43, "recovery_target": "responsible-third-party", "at": 55}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-receipt-yi", "op": "payment_receipt", "id": "receipt-yi-wire", "settlement": "settle-yi-cash", "channel": "ach", "ref": "ACH-8802", "paid_at": 57}},
+
+  {"subsystem": "insurance", "payload": {"event_id": "dt-subrogation-jia", "op": "subrogate", "id": "sub-jia", "claim": "claim-jia", "order_id": "order-jia", "target": "at-fault-storage-vendor", "basis": "direct_provider_payment_assignment", "amount": 80, "at": 60}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-recovery-jia", "op": "recovery_receipt", "id": "recovery-jia-1", "case": "sub-jia", "target": "at-fault-storage-vendor", "amount": 35, "ref": "VENDOR-SETTLEMENT-1", "at": 70}},
+
+  {"subsystem": "insurance", "payload": {"event_id": "dt-policy-bing", "op": "policy", "id": "pol-bing", "tenant": "tenant-bing", "subject": "tenant-bing", "subjects": ["tenant-bing"], "window_start": 1, "window_end": 1000, "policy_year": "FY2026", "annual_limit": 200, "incident_limit": 100, "deductible": 0, "insurer_generation": 2}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-outage-bing", "op": "outage", "id": "outage-bing", "incident": "inc-dual", "tenant": "tenant-bing", "intent": "work-bing", "cluster": "cluster-a", "confirmed_by": "tenant-bing-self", "interrupted_at": 20}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-invoice-bing", "op": "invoice", "id": "inv-bing-fake", "ref": "FAKE-SEAT-1", "tenant": "tenant-bing", "intent": "work-bing", "incident": "inc-dual", "kind": "temporary_capacity", "category": "outage", "vendor": "none", "amount": 90, "incurred_at": 30}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-claim-bing", "op": "claim", "id": "claim-bing", "policy": "pol-bing", "incident": "inc-dual", "tenant": "tenant-bing", "intent": "work-bing", "lease": "lease-bing-c", "outage": "outage-bing", "invoices": ["inv-bing-fake"], "amount": 90, "at": 50}},
+  {"subsystem": "insurance", "payload": {"event_id": "dt-adjust-bing", "op": "adjust", "id": "order-bing-rejected", "claim": "claim-bing", "at": 51}}
+]
