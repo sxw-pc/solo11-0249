@@ -1,0 +1,5 @@
+[
+  {"event_id":"insurance-policy","op":"policy","id":"insurance-policy","tenant":"tenant-a","limit":100,"deductible":10,"expires":100},
+  {"event_id":"insurance-claim","op":"claim","id":"insurance-claim","policy":"insurance-policy","incident":"incident-a","amount":40,"at":1},
+  {"event_id":"insurance-assess","op":"assess","id":"insurance-assess","claim":"insurance-claim"}
+]
