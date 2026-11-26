@@ -1,0 +1,4 @@
+[
+  {"event_id":"network-invalid","op":"path","id":"network-invalid","source":"a","target":"b","segment":"x","bandwidth":0,"revision":1},
+  {"event_id":"network-missing","op":"book","id":"network-missing","path":"missing","intent":"work-a","bandwidth":2}
+]

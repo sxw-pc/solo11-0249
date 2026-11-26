@@ -1,0 +1,5 @@
+[
+  {"event_id":"network-path","op":"path","id":"network-path","source":"cluster-a","target":"cluster-b","segment":"fiber-a","bandwidth":5,"revision":1},
+  {"event_id":"network-book","op":"book","id":"network-book","path":"network-path","intent":"work-a","bandwidth":3},
+  {"event_id":"network-release","op":"release","id":"network-book"}
+]
