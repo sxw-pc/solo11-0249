@@ -31,7 +31,10 @@ def main():
         else:
             if not args.fixture:parser.error('--fixture required')
             commands=json.loads(Path(args.fixture).read_text(encoding='utf-8'))
-            result=[MODULES[args.command].run(db,x) for x in commands]
+            if commands and isinstance(commands[0],dict) and 'subsystem' in commands[0]:
+                result=[MODULES[x['subsystem']].run(db,x['payload']) for x in commands]
+            else:
+                result=[MODULES[args.command].run(db,x) for x in commands]
         db.close()
     print(json.dumps(result,ensure_ascii=False,indent=2))
     if args.command=='replay' and not result['verified']:raise SystemExit(2)

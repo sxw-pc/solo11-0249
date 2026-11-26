@@ -1,0 +1,47 @@
+[
+  {"subsystem": "intent", "payload": {"event_id": "c7-rule-a", "op": "rule", "tenant": "tenant-a", "regions": ["east"], "revision": 1}},
+  {"subsystem": "intent", "payload": {"event_id": "c7-rule-b", "op": "rule", "tenant": "tenant-b", "regions": ["east"], "revision": 1}},
+  {"subsystem": "intent", "payload": {"event_id": "c7-intent-a", "op": "claim", "id": "work-a", "tenant": "tenant-a", "region": "east", "role": "production"}},
+  {"subsystem": "intent", "payload": {"event_id": "c7-intent-b", "op": "claim", "id": "work-b", "tenant": "tenant-b", "region": "east", "role": "hot_standby"}},
+
+  {"subsystem": "seat", "payload": {"event_id": "c7-observe-7", "op": "observe", "id": "cluster-c7", "region": "east", "domain": "rack-c7", "cpu": 16, "mem": 32, "generation": 1, "healthy": true}},
+  {"subsystem": "seat", "payload": {"event_id": "c7-observe-9", "op": "observe", "id": "cluster-c9", "region": "east", "domain": "rack-c9", "cpu": 16, "mem": 32, "generation": 1, "healthy": true}},
+  {"subsystem": "seat", "payload": {"event_id": "c7-reserve-a", "op": "reserve", "id": "lease-a-c7", "intent": "work-a", "cluster": "cluster-c7", "role": "primary", "cpu": 4, "mem": 8, "expires": 200000}},
+  {"subsystem": "seat", "payload": {"event_id": "c7-occupy-a", "op": "occupy", "id": "lease-a-c7", "at": 100}},
+  {"subsystem": "seat", "payload": {"event_id": "c7-reserve-b", "op": "reserve", "id": "lease-b-c7", "intent": "work-b", "cluster": "cluster-c7", "role": "backup", "cpu": 6, "mem": 12, "expires": 200000}},
+  {"subsystem": "seat", "payload": {"event_id": "c7-occupy-b", "op": "occupy", "id": "lease-b-c7", "at": 100}},
+  {"subsystem": "seat", "payload": {"event_id": "c7-reserve-a9", "op": "reserve", "id": "lease-a-c9", "intent": "work-a", "cluster": "cluster-c9", "role": "backup", "cpu": 4, "mem": 8, "expires": 200000}},
+  {"subsystem": "seat", "payload": {"event_id": "c7-occupy-a9", "op": "occupy", "id": "lease-a-c9", "at": 101}},
+
+  {"subsystem": "carbon", "payload": {"event_id": "c7-meter", "op": "meter", "id": "meter-c7", "cluster": "cluster-c7", "certified": true, "evidence": "meter-seal-77"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-order-a", "op": "order", "id": "order-a", "tenant": "tenant-a", "period": "2026-11", "ceiling": 45, "meter": "meter-c7", "unit_rate": 1, "penalty_rate": 2}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-order-b", "op": "order", "id": "order-b", "tenant": "tenant-b", "period": "2026-11", "ceiling": 20, "meter": "meter-c7", "unit_rate": 1, "penalty_rate": 2}},
+
+  {"subsystem": "carbon", "payload": {"event_id": "c7-reading-r1", "op": "reading", "id": "reading-c7", "meter": "meter-c7", "cluster": "cluster-c7", "period": "2026-11", "units": 100, "source": "grid-gateway-c7", "revision": 1, "start": "2026-11-01T00:00", "end": "2026-12-01T00:00", "surveyor": "surveyor-north", "evidence": "cred://meter-c7/2026-11/certified-r1"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-reading-dup-upload", "op": "reading", "id": "reading-c7", "meter": "meter-c7", "cluster": "cluster-c7", "period": "2026-11", "units": 100, "source": "grid-gateway-c7", "revision": 1, "start": "2026-11-01T00:00", "end": "2026-12-01T00:00", "surveyor": "surveyor-north", "evidence": "cred://meter-c7/2026-11/certified-r1"}},
+
+  {"subsystem": "carbon", "payload": {"event_id": "c7-agr-hours", "op": "agreement", "id": "agr-hours", "meter": "meter-c7", "period": "2026-11", "method": "run_hours", "standby_bearer": "standby_owner", "parties": ["tenant-a", "tenant-b"], "confirmed_by": ["tenant-a", "tenant-b"], "signed": true, "terms": {"clause": "7.2-running-hours", "note": "allocate by certified actual running hours; shared running load carried more heavily by tenant-a"}}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-agr-capacity", "op": "agreement", "id": "agr-capacity", "meter": "meter-c7", "period": "2026-11", "method": "guaranteed_capacity", "standby_bearer": "standby_owner", "parties": ["tenant-a", "tenant-b"], "confirmed_by": ["tenant-a", "tenant-b"], "signed": true, "terms": {"clause": "7.3-guaranteed-capacity", "note": "allocate by retained guaranteed capacity; tenant-b hot standby reservation raises its share"}}},
+
+  {"subsystem": "carbon", "payload": {"event_id": "c7-neg-hours", "op": "negotiation", "id": "neg-hours", "meter": "meter-c7", "period": "2026-11", "agreement": "agr-hours", "confirmed_by": ["tenant-a", "tenant-b"], "at": "2026-11-02T10:00"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-neg-capacity", "op": "negotiation", "id": "neg-capacity", "meter": "meter-c7", "period": "2026-11", "agreement": "agr-capacity", "confirmed_by": ["tenant-a", "tenant-b"], "at": "2026-11-02T10:05"}},
+
+  {"subsystem": "carbon", "payload": {"event_id": "c7-window-a-occ", "op": "load_window", "id": "lw-a-occ", "intent": "work-a", "lease": "lease-a-c7", "cluster": "cluster-c7", "kind": "occupied", "start": "2026-11-01T00:00", "end": "2026-11-28T00:00", "evidence": "seat-export-c7-nov#a-occ"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-window-a-rep", "op": "load_window", "id": "lw-a-rep-c7", "intent": "work-a", "lease": "lease-a-c7", "cluster": "cluster-c7", "kind": "replication", "start": "2026-11-28T00:00", "end": "2026-12-01T12:00", "peer_cluster": "cluster-c9", "migration": "move-a-c7-c9", "evidence": "replication-gateway-a#nov-cross"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-window-a-rep9", "op": "load_window", "id": "lw-a-rep-c9", "intent": "work-a", "lease": "lease-a-c9", "cluster": "cluster-c9", "kind": "replication", "start": "2026-11-30T00:00", "end": "2026-12-01T12:00", "peer_cluster": "cluster-c7", "migration": "move-a-c7-c9", "evidence": "replication-gateway-a#target-feed"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-window-b-pre", "op": "load_window", "id": "lw-b-pre", "intent": "work-b", "lease": "lease-b-c7", "cluster": "cluster-c7", "kind": "preheat", "start": "2026-11-01T00:00", "end": "2026-11-11T00:00", "evidence": "warm-standby-controller-b#preheat"}},
+
+  {"subsystem": "carbon", "payload": {"event_id": "c7-settle-hours", "op": "settle", "id": "run-hours", "negotiation": "neg-hours"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-settle-capacity", "op": "settle", "id": "run-capacity", "negotiation": "neg-capacity"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-issue-hours", "op": "issue", "run": "run-hours"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-issue-capacity", "op": "issue", "run": "run-capacity"}},
+
+  {"subsystem": "carbon", "payload": {"event_id": "c7-pay-a-old", "op": "pay", "id": "pay-a-hours", "bill": "run-hours:tenant-a", "amount": 135, "at": "2026-11-22T09:00"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-dispute-b", "op": "dispute", "id": "dsp-b", "bill": "run-hours:tenant-b", "tenant": "tenant-b", "reason": "meter correction pending and preheat hours challenged", "at": "2026-11-23T14:00", "deadline": "2026-12-15"}},
+
+  {"subsystem": "carbon", "payload": {"event_id": "c7-reading-r2", "op": "reading", "id": "reading-c7", "meter": "meter-c7", "cluster": "cluster-c7", "period": "2026-11", "units": 96, "source": "grid-gateway-c7", "revision": 2, "start": "2026-11-01T00:00", "end": "2026-12-01T00:00", "surveyor": "surveyor-north", "evidence": "cred://meter-c7/2026-11/certified-r2"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-recalc-hours", "op": "recalculate", "id": "run-hours-r2", "supersedes": "run-hours"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-issue-hours-r2", "op": "issue", "run": "run-hours-r2"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-resolve-b", "op": "resolve_dispute", "dispute": "dsp-b", "outcome": "upheld", "successor": "run-hours-r2:tenant-b"}},
+  {"subsystem": "carbon", "payload": {"event_id": "c7-pay-b-r2", "op": "pay", "id": "pay-b-r2", "bill": "run-hours-r2:tenant-b", "amount": 32, "at": "2026-12-18T10:00"}}
+]
