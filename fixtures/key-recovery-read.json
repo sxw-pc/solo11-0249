@@ -1,0 +1,510 @@
+[
+  {
+    "subsystem": "intent",
+    "payload": {
+      "event_id": "w-rule",
+      "op": "rule",
+      "id": "rule-w",
+      "tenant": "w",
+      "regions": [
+        "west"
+      ],
+      "revision": 1
+    }
+  },
+  {
+    "subsystem": "intent",
+    "payload": {
+      "event_id": "w-claim",
+      "op": "claim",
+      "id": "work-w",
+      "tenant": "w",
+      "region": "west",
+      "role": "critical"
+    }
+  },
+  {
+    "subsystem": "intent",
+    "payload": {
+      "event_id": "w-grant",
+      "op": "grant",
+      "id": "grant-w",
+      "intent": "work-w",
+      "actor": "owner-w",
+      "role": "promote",
+      "generation": 1,
+      "expires": 200
+    }
+  },
+  {
+    "subsystem": "seat",
+    "payload": {
+      "event_id": "w-inv-c0",
+      "op": "observe",
+      "id": "cluster-c0",
+      "region": "west",
+      "domain": "rack-c0",
+      "cpu": 8,
+      "mem": 16,
+      "generation": 1,
+      "healthy": true
+    }
+  },
+  {
+    "subsystem": "seat",
+    "payload": {
+      "event_id": "w-inv-c1",
+      "op": "observe",
+      "id": "cluster-c1",
+      "region": "west",
+      "domain": "rack-c1",
+      "cpu": 8,
+      "mem": 16,
+      "generation": 1,
+      "healthy": true
+    }
+  },
+  {
+    "subsystem": "seat",
+    "payload": {
+      "event_id": "w-res-c0",
+      "op": "reserve",
+      "id": "lease-c0",
+      "intent": "work-w",
+      "cluster": "cluster-c0",
+      "role": "primary",
+      "cpu": 2,
+      "mem": 4,
+      "expires": 200
+    }
+  },
+  {
+    "subsystem": "seat",
+    "payload": {
+      "event_id": "w-occ-c0",
+      "op": "occupy",
+      "id": "lease-c0",
+      "at": 1
+    }
+  },
+  {
+    "subsystem": "seat",
+    "payload": {
+      "event_id": "w-res-c1",
+      "op": "reserve",
+      "id": "lease-c1",
+      "intent": "work-w",
+      "cluster": "cluster-c1",
+      "role": "backup",
+      "cpu": 2,
+      "mem": 4,
+      "expires": 200
+    }
+  },
+  {
+    "subsystem": "seat",
+    "payload": {
+      "event_id": "w-occ-c1",
+      "op": "occupy",
+      "id": "lease-c1",
+      "at": 1
+    }
+  },
+  {
+    "subsystem": "intent",
+    "payload": {
+      "event_id": "w-assign",
+      "op": "assign_primary",
+      "intent": "work-w",
+      "cluster": "cluster-c0",
+      "grant": "grant-w",
+      "at": 2
+    }
+  },
+  {
+    "subsystem": "evac",
+    "payload": {
+      "event_id": "w-inc",
+      "op": "incident",
+      "id": "inc-w",
+      "cluster": "cluster-c0",
+      "severity": 4,
+      "generation": 1
+    }
+  },
+  {
+    "subsystem": "evac",
+    "payload": {
+      "event_id": "w-plan",
+      "op": "plan",
+      "id": "move-w",
+      "intent": "work-w",
+      "source": "cluster-c0",
+      "target": "cluster-c1",
+      "incident": "inc-w"
+    }
+  },
+  {
+    "subsystem": "evac",
+    "payload": {
+      "event_id": "w-fence",
+      "op": "receipt",
+      "id": "receipt-fence",
+      "plan": "move-w",
+      "kind": "source_fenced",
+      "cluster": "cluster-c0",
+      "generation": 1
+    }
+  },
+  {
+    "subsystem": "evac",
+    "payload": {
+      "event_id": "w-ready",
+      "op": "receipt",
+      "id": "receipt-ready",
+      "plan": "move-w",
+      "kind": "target_ready",
+      "cluster": "cluster-c1",
+      "generation": 1
+    }
+  },
+  {
+    "subsystem": "evac",
+    "payload": {
+      "event_id": "w-handoff",
+      "op": "handoff",
+      "id": "handoff-w",
+      "plan": "move-w"
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-key-old",
+      "op": "key",
+      "id": "key-w-old",
+      "tenant": "w",
+      "intent": "work-w",
+      "epoch": 1,
+      "at": 2,
+      "sealed_ref": "kms://customer-w/key-w-old/epoch-1/wrapped-dek"
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-cust-jia",
+      "op": "custodian",
+      "id": "c-jia",
+      "tenant": "w",
+      "canonical": "PII-JIA-0001",
+      "label": "custodian-jia-revoked",
+      "aliases": [
+        "jia",
+        "jia-old-name"
+      ],
+      "at": 2
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-cust-yi",
+      "op": "custodian",
+      "id": "c-yi",
+      "tenant": "w",
+      "canonical": "PII-YI-0002",
+      "label": "custodian-yi",
+      "aliases": [
+        "yi",
+        "yi-former-name"
+      ],
+      "at": 2
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-cust-bing",
+      "op": "custodian",
+      "id": "c-bing",
+      "tenant": "w",
+      "canonical": "PII-BING-0003",
+      "label": "custodian-bing-new",
+      "aliases": [
+        "bing"
+      ],
+      "at": 20
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-vote-jia",
+      "op": "vote",
+      "id": "vote-jia",
+      "key": "key-w-old",
+      "actor": "jia-old-name",
+      "at": 3
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-revoke-jia",
+      "op": "revoke_custodian",
+      "id": "ev-revoke-jia",
+      "custodian": "c-jia",
+      "at": 5,
+      "reason": "qualification_lapsed"
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-alias-bing",
+      "op": "custodian_alias",
+      "id": "alias-bing",
+      "custodian": "c-bing",
+      "alias": "bing-renamed",
+      "at": 20
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-consent",
+      "op": "consent",
+      "id": "consent-w",
+      "tenant": "w",
+      "intent": "work-w",
+      "incident": "inc-w",
+      "scope": "incident_recovery",
+      "modes": [
+        "read",
+        "read_write",
+        "rotate"
+      ],
+      "terms": {
+        "package_ttl": 60,
+        "attestation_ttl": 30,
+        "dual_path_authorization": true
+      },
+      "at": 6
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-dev-v1",
+      "op": "device",
+      "id": "dev-c1",
+      "cluster": "cluster-c1",
+      "generation": 1,
+      "measurement": "sha256:measurement-c1-generation-1",
+      "at": 4
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-dev-v2",
+      "op": "device",
+      "id": "dev-c1",
+      "cluster": "cluster-c1",
+      "generation": 2,
+      "measurement": "sha256:measurement-c1-generation-2-golden",
+      "at": 10
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-segments",
+      "op": "segments",
+      "id": "seg-w-old",
+      "key": "key-w-old",
+      "seqs": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "cluster": "cluster-c1"
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-prefix",
+      "op": "prefix",
+      "id": "pref-w-old",
+      "key": "key-w-old",
+      "through_seq": 8,
+      "at": 24,
+      "source": "customer-committed-quorum"
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-tail-9",
+      "op": "tail_write",
+      "id": "tail-9",
+      "intent": "work-w",
+      "seq": 9,
+      "digest_ref": "digest://w/seq/9",
+      "at": 24
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-tail-10",
+      "op": "tail_write",
+      "id": "tail-10",
+      "intent": "work-w",
+      "seq": 10,
+      "digest_ref": "digest://w/seq/10",
+      "at": 24
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-vote-yi",
+      "op": "vote",
+      "id": "vote-yi",
+      "key": "key-w-old",
+      "actor": "yi",
+      "at": 21
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-vote-bing",
+      "op": "vote",
+      "id": "vote-bing",
+      "key": "key-w-old",
+      "actor": "bing-renamed",
+      "at": 22
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-case-read",
+      "op": "release_case",
+      "id": "case-w-read",
+      "key": "key-w-old",
+      "cluster": "cluster-c1",
+      "consent": "consent-w",
+      "incident": "inc-w",
+      "device": "dev-c1",
+      "mode": "read",
+      "nonce": "nonce-read",
+      "at": 24,
+      "attestation_ttl": 30,
+      "package_ttl": 60
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-att-read",
+      "op": "attest",
+      "id": "att-read",
+      "device": "dev-c1",
+      "generation": 2,
+      "measurement": "sha256:measurement-c1-generation-2-golden",
+      "nonce": "nonce-read",
+      "at": 25
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-rel-read",
+      "op": "release",
+      "id": "rel-w-read-biz",
+      "key": "key-w-old",
+      "case": "case-w-read",
+      "cluster": "cluster-c1",
+      "mode": "read",
+      "at": 26
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-rec-9",
+      "op": "reconcile_tail",
+      "id": "rec-9",
+      "tail": "tail-9",
+      "outcome": "confirmed",
+      "at": 27
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-rec-10",
+      "op": "reconcile_tail",
+      "id": "rec-10",
+      "tail": "tail-10",
+      "outcome": "confirmed",
+      "at": 28
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-case-write",
+      "op": "release_case",
+      "id": "case-w-write",
+      "key": "key-w-old",
+      "cluster": "cluster-c1",
+      "consent": "consent-w",
+      "incident": "inc-w",
+      "device": "dev-c1",
+      "mode": "read_write",
+      "nonce": "nonce-write",
+      "at": 28,
+      "attestation_ttl": 30,
+      "package_ttl": 60
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-att-write",
+      "op": "attest",
+      "id": "att-write",
+      "device": "dev-c1",
+      "generation": 2,
+      "measurement": "sha256:measurement-c1-generation-2-golden",
+      "nonce": "nonce-write",
+      "at": 29
+    }
+  },
+  {
+    "subsystem": "custody",
+    "payload": {
+      "event_id": "w-rel-write",
+      "op": "release",
+      "id": "rel-w-write-biz",
+      "key": "key-w-old",
+      "case": "case-w-write",
+      "cluster": "cluster-c1",
+      "mode": "read_write",
+      "at": 30
+    }
+  }
+]
