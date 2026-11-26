@@ -11,6 +11,8 @@ def handle(db,x):
         old=one(db,'SELECT * FROM cluster_inventory WHERE id=?',(x['id'],))
         if old and x['generation']<=old['generation']:return {'decision':'stale_inventory'}
         if min(x['cpu'],x['mem'])<=0:return {'decision':'invalid_capacity'}
+        if x['healthy'] and one(db,"SELECT 1 FROM repair_orders WHERE cluster=? AND state='open' LIMIT 1",(x['id'],)):
+            return {'decision':'physical_acceptance_pending'}
         db.execute('INSERT INTO cluster_inventory VALUES(?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET region=excluded.region,domain=excluded.domain,cpu=excluded.cpu,mem=excluded.mem,generation=excluded.generation,healthy=excluded.healthy',(x['id'],x['region'],x['domain'],x['cpu'],x['mem'],x['generation'],int(x['healthy'])))
         return {'decision':'observed'}
     if op=='reserve':
