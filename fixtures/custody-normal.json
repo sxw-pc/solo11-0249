@@ -1,0 +1,6 @@
+[
+  {"event_id":"custody-key","op":"key","id":"custody-key","tenant":"tenant-a","intent":"work-a","epoch":1},
+  {"event_id":"custody-v1","op":"vote","id":"custody-v1","key":"custody-key","actor":"alice","at":1},
+  {"event_id":"custody-v2","op":"vote","id":"custody-v2","key":"custody-key","actor":"bob","at":2},
+  {"event_id":"custody-release","op":"release","id":"custody-release","key":"custody-key","cluster":"cluster-a","at":3}
+]

@@ -1,0 +1,4 @@
+[
+  {"event_id":"custody-missing-vote","op":"vote","id":"custody-invalid","key":"missing","actor":"eve","at":4},
+  {"event_id":"custody-missing-release","op":"release","id":"custody-invalid-release","key":"missing","cluster":"cluster-a","at":5}
+]
