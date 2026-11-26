@@ -1,0 +1,4 @@
+[
+  {"event_id":"hardware-missing-lot","op":"install","serial":"bad","lot":"missing","cluster":"cluster-a","at":3},
+  {"event_id":"hardware-missing-unit","op":"repair","id":"bad-repair","serial":"missing","at":4}
+]

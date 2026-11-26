@@ -1,0 +1,5 @@
+[
+  {"event_id":"hardware-lot","op":"lot","id":"hardware-lot","vendor":"vendor-a","model":"cpu-a","revision":1},
+  {"event_id":"hardware-install","op":"install","serial":"serial-a","lot":"hardware-lot","cluster":"cluster-a","at":1},
+  {"event_id":"hardware-repair","op":"repair","id":"hardware-repair","serial":"serial-a","at":2}
+]
