@@ -1,0 +1,45 @@
+[
+  {
+    "event_id": "rtf1",
+    "op": "sign_rule",
+    "tenant": "tenant-rtf",
+    "revision": 1,
+    "regions": ["east"],
+    "effective_at": 10,
+    "signed_at": 5,
+    "data_categories": ["customer"],
+    "purposes": ["primary_service"],
+    "workload_scope": "existing_and_new"
+  },
+  {
+    "event_id": "rtf2",
+    "op": "admit",
+    "id": "work-rtf",
+    "tenant": "tenant-rtf",
+    "region": "west",
+    "role": "critical",
+    "at": 6
+  },
+  {
+    "event_id": "rtf3",
+    "op": "observe_cluster",
+    "id": "rtf-west",
+    "region": "west",
+    "domain": "rack-rtf-west",
+    "cpu": 8,
+    "mem": 16,
+    "generation": 1,
+    "healthy": true
+  },
+  {
+    "event_id": "rtf4",
+    "op": "reserve_seat",
+    "id": "rtf-seat-west",
+    "workload": "work-rtf",
+    "cluster": "rtf-west",
+    "role": "primary",
+    "cpu": 2,
+    "mem": 4,
+    "at": 7
+  }
+]

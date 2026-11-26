@@ -1,0 +1,79 @@
+[
+  {
+    "event_id": "rt1",
+    "op": "sign_rule",
+    "tenant": "tenant-rt",
+    "revision": 1,
+    "regions": ["east", "west"],
+    "effective_at": 0,
+    "signed_at": 0,
+    "data_categories": ["customer"],
+    "purposes": ["primary_service"],
+    "workload_scope": "existing_and_new"
+  },
+  {
+    "event_id": "rt2",
+    "op": "admit",
+    "id": "work-rt",
+    "tenant": "tenant-rt",
+    "region": "west",
+    "role": "critical",
+    "at": 1
+  },
+  {
+    "event_id": "rt3",
+    "op": "observe_cluster",
+    "id": "rt-c0",
+    "region": "west",
+    "domain": "rack-west-0",
+    "cpu": 8,
+    "mem": 16,
+    "generation": 1,
+    "healthy": true
+  },
+  {
+    "event_id": "rt4",
+    "op": "grant_permission",
+    "id": "perm-failover",
+    "workload": "work-rt",
+    "actor": "owner-rt",
+    "scope": "failover",
+    "revision": 1,
+    "expires": 100
+  },
+  {
+    "event_id": "rt5",
+    "op": "reserve_seat",
+    "id": "rt-seat-primary",
+    "workload": "work-rt",
+    "cluster": "rt-c0",
+    "role": "primary",
+    "cpu": 2,
+    "mem": 4,
+    "at": 2
+  },
+  {
+    "event_id": "rt6",
+    "op": "occupy_seat",
+    "id": "rt-seat-primary",
+    "at": 3
+  },
+  {
+    "event_id": "rt7",
+    "op": "write",
+    "workload": "work-rt",
+    "cluster": "rt-c0",
+    "seq": 1,
+    "at": 4
+  },
+  {
+    "event_id": "rt8",
+    "op": "place_artifact",
+    "id": "rt-snap-1",
+    "workload": "work-rt",
+    "kind": "snapshot",
+    "cluster": "rt-c0",
+    "seq": 1,
+    "at": 5
+  }
+]
