@@ -10,6 +10,10 @@ def connect(path):
     from . import MODULES
     for module in MODULES.values():
         db.executescript(module.SCHEMA)
+        for table,column,statement in getattr(module,'MIGRATIONS',()):
+            columns={row[1] for row in db.execute(f'PRAGMA table_info({table})')}
+            if column not in columns:
+                db.execute(statement)
     return db
 
 @contextmanager

@@ -1,18 +1,53 @@
 from .store import act,one
 SCHEMA='''
-CREATE TABLE IF NOT EXISTS incident_cases(id TEXT PRIMARY KEY,cluster TEXT,severity INTEGER,generation INTEGER,state TEXT);
-CREATE TABLE IF NOT EXISTS move_plans(id TEXT PRIMARY KEY,intent TEXT,source TEXT,target TEXT,incident TEXT,state TEXT);
+CREATE TABLE IF NOT EXISTS incident_cases(id TEXT PRIMARY KEY,cluster TEXT,severity INTEGER,generation INTEGER,state TEXT,level TEXT,evidence TEXT);
+CREATE TABLE IF NOT EXISTS move_plans(id TEXT PRIMARY KEY,intent TEXT,source TEXT,target TEXT,incident TEXT,state TEXT,evidence TEXT);
 CREATE TABLE IF NOT EXISTS handoff_receipts(id TEXT PRIMARY KEY,plan TEXT,kind TEXT,cluster TEXT,generation INTEGER,state TEXT);
 CREATE TABLE IF NOT EXISTS recovery_cases(id TEXT PRIMARY KEY,plan TEXT,reason TEXT,source TEXT,target TEXT,state TEXT);
 '''
+MIGRATIONS=[
+    ('incident_cases','level','ALTER TABLE incident_cases ADD COLUMN level TEXT'),
+    ('incident_cases','evidence','ALTER TABLE incident_cases ADD COLUMN evidence TEXT'),
+    ('move_plans','evidence','ALTER TABLE move_plans ADD COLUMN evidence TEXT'),
+]
+
+def _fault_evidence(db,incident,disposition_id):
+    '''Return the active fault disposition for an incident, or an error decision.'''
+    disposition=one(db,'SELECT * FROM fault_dispositions WHERE id=?',(disposition_id,))
+    if not disposition or disposition['incident']!=incident:
+        return None,'fault_evidence_unavailable'
+    version=one(db,'SELECT rowid FROM fault_evidence_versions WHERE id=?',(disposition['evidence'],))
+    if not version:
+        return None,'fault_evidence_unavailable'
+    if disposition['state']!='active':
+        return None,'fault_disposition_inactive'
+    return disposition,None
+
+def _superseded(db,disposition):
+    '''True when later counter-evidence lowered the recommendation below the disposition.'''
+    latest=one(db,'SELECT id,snapshot FROM fault_evidence_versions WHERE incident=? ORDER BY rowid DESC LIMIT 1',(disposition['incident'],))
+    if not latest or latest['id']==disposition['evidence']:
+        return False
+    import json
+    snapshot=json.loads(latest['snapshot'])
+    return snapshot['recommended_level']!=disposition['level'] or snapshot.get('counter')
 
 def handle(db,x):
     op=x['op']
     if op=='incident':
         old=one(db,'SELECT * FROM incident_cases WHERE id=?',(x['id'],))
         if old and x['generation']<=old['generation']:return {'decision':'stale_incident'}
+        disposition_id=x.get('evidence') or x.get('disposition')
+        if disposition_id:
+            disposition,error=_fault_evidence(db,x['id'],disposition_id)
+            if error:return {'decision':error}
+            level=disposition['level']
+            if x.get('level') and x['level']!=level:return {'decision':'incident_level_mismatch'}
+            state='evacuate' if disposition['action'] in ('evacuate_to_independent_domain','evacuate_cluster') else 'watch'
+            db.execute('INSERT INTO incident_cases VALUES(?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET severity=excluded.severity,generation=excluded.generation,state=excluded.state,level=excluded.level,evidence=excluded.evidence',(x['id'],x['cluster'],x.get('severity',0),x['generation'],state,level,disposition_id))
+            return {'decision':state,'level':level,'action':disposition['action'],'evidence':disposition_id}
         state='evacuate' if x['severity']>=3 else 'watch'
-        db.execute('INSERT INTO incident_cases VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET severity=excluded.severity,generation=excluded.generation,state=excluded.state',(x['id'],x['cluster'],x['severity'],x['generation'],state))
+        db.execute('INSERT INTO incident_cases VALUES(?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET severity=excluded.severity,generation=excluded.generation,state=excluded.state,level=excluded.level,evidence=excluded.evidence',(x['id'],x['cluster'],x['severity'],x['generation'],state,None,None))
         return {'decision':state}
     if op=='plan':
         incident=one(db,'SELECT * FROM incident_cases WHERE id=?',(x['incident'],))
@@ -21,11 +56,25 @@ def handle(db,x):
         source=one(db,"SELECT * FROM placement_leases WHERE intent=? AND cluster=? AND role='primary' AND state='occupied'",(x['intent'],x['source']))
         if not incident or incident['state']!='evacuate' or not intent or intent['primary_cluster']!=x['source'] or incident['cluster']!=x['source'] or not lease or not source:
             return {'decision':'no_safe_target'}
+        if one(db,"SELECT 1 FROM move_plans WHERE intent=? AND source=? AND target=? AND state IN ('planned','complete')",(x['intent'],x['source'],x['target'])) or one(db,"SELECT 1 FROM move_plans WHERE intent=? AND state='planned'",(x['intent'],)):
+            return {'decision':'duplicate_move'}
         target=one(db,'SELECT * FROM cluster_inventory WHERE id=?',(x['target'],))
         if not target or not target['healthy'] or target['generation']!=lease['generation']:
             return {'decision':'target_changed'}
-        db.execute('INSERT INTO move_plans VALUES(?,?,?,?,?,?)',(x['id'],x['intent'],x['source'],x['target'],x['incident'],'planned'))
-        return {'decision':'planned'}
+        evidence=x.get('evidence') or incident['evidence']
+        if evidence:
+            disposition,error=_fault_evidence(db,x['incident'],evidence)
+            if error:return {'decision':error}
+            if _superseded(db,disposition):return {'decision':'evidence_superseded'}
+            if disposition['action'] not in ('evacuate_to_independent_domain','evacuate_cluster'):
+                return {'decision':'disposition_does_not_authorize_move'}
+            source_domain=one(db,'SELECT domain FROM cluster_inventory WHERE id=?',(x['source'],))
+            target_domain=one(db,'SELECT domain FROM cluster_inventory WHERE id=?',(x['target'],))
+            if disposition['action']=='evacuate_to_independent_domain' and source_domain and target_domain and source_domain['domain']==target_domain['domain']:
+                return {'decision':'target_not_independent'}
+        db.execute('INSERT INTO move_plans VALUES(?,?,?,?,?,?,?)',(x['id'],x['intent'],x['source'],x['target'],x['incident'],'planned',evidence))
+        evidence_version=one(db,'SELECT evidence FROM fault_dispositions WHERE id=?',(evidence,))['evidence'] if evidence else None
+        return {'decision':'planned','evidence':evidence_version,'disposition':evidence}
     if op=='abort':
         p=one(db,'SELECT * FROM move_plans WHERE id=?',(x['plan'],))
         if not p or p['state']!='planned':return {'decision':'plan_unavailable'}
